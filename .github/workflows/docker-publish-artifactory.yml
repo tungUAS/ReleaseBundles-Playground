@@ -9,6 +9,7 @@ env:
   APP_VERSION: 1.0.0
   DOCKER_REPO: docker-dev-local
   ARTIFACTORY_URL: https://triald331v3.jfrog.io/
+  ARTIFACTORY_DOCKER_HOST: triald331v3.jfrog.io
 
 jobs:
   docker-publish:
@@ -18,7 +19,8 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - uses: jfrog/setup-jfrog-cli@v4
+      - name: Set up JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
         env:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 
@@ -39,8 +41,12 @@ jobs:
 
       - name: Tag Docker image for Artifactory
         run: |
-          docker tag $APP_NAME:$APP_VERSION $ARTIFACTORY_URL/$DOCKER_REPO/$APP_NAME:$APP_VERSION
+          docker tag $APP_NAME:$APP_VERSION $ARTIFACTORY_DOCKER_HOST/$DOCKER_REPO/$APP_NAME:$APP_VERSION
+
+      - name: Log in to JFrog Artifactory Docker registry
+        run: |
+          echo "${{ secrets.JF_ACCESS_TOKEN }}" | docker login $ARTIFACTORY_DOCKER_HOST --username ${{ secrets.JF_ARTIFACTORY_USERNAME }} --password-stdin
 
       - name: Push Docker image to Artifactory
         run: |
-          docker push $ARTIFACTORY_URL/$DOCKER_REPO/$APP_NAME:$APP_VERSION
+          docker push $ARTIFACTORY_DOCKER_HOST/$DOCKER_REPO/$APP_NAME:$APP_VERSION
