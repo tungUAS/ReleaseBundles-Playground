@@ -30,7 +30,7 @@ jobs:
       
       - name: Push image to Artifactory with JFrog CLI
         run: |
-          jf docker-push triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest my-docker-build --build-name=hello-express-app --build-number=${{ github.run_number }}
+          jf rt docker-push triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest my-docker-build --build-name=hello-express-app --build-number=${{ github.run_number }}
       
       - name: Publish Build Info
         run: |
