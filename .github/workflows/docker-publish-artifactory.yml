@@ -22,8 +22,16 @@ jobs:
         env:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 
-      - run: |
-          jf rt ping
+      - name: Configure JFrog CLI
+        run: |
+          jf c add artifactory-server \
+            --url $ARTIFACTORY_URL \
+            --access-token ${{ secrets.JF_ACCESS_TOKEN }}
+
+      - name: Test connection
+        run: jf rt ping
+        env:
+          JFROG_CLI_SERVER_ID: artifactory-server
 
       - name: Build Docker image
         run: |
