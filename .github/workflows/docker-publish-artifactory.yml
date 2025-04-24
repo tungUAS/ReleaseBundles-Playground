@@ -18,8 +18,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t triald331v3.jfrog.io/my-docker-repo/hello-express-app:latest .
+          docker build -t triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest .
 
       - name: Push Docker image to JFrog
         run: |
-          docker push triald331v3.jfrog.io/my-docker-repo/hello-express-app:latest
+          docker push triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest
