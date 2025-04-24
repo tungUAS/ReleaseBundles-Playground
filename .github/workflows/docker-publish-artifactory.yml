@@ -46,7 +46,7 @@ jobs:
 
       - name: Collect environment variables
         run: |
-          jf rt bce hello-express-app ${{ github.run_number }} --server-id=my-server
+          jf rt bce hello-express-app ${{ github.run_number }}
 
       - name: Publish Build Info to Artifactory
         run: |
