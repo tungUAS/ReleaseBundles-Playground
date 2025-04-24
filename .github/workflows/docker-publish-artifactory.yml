@@ -12,14 +12,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Log in to JFrog Artifactory Docker registry
+      
+      - name: Configure JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v3
+        with:
+          jfrog-version: latest
+          jfrog-url: https://triald331v3.jfrog.io
+          jfrog-username: ${{ secrets.JFROG_USERNAME }}
+          jfrog-password: ${{ secrets.JFROG_PASSWORD }}
+      
+      - name: Docker login (for local push)
         run: echo "${{ secrets.JFROG_PASSWORD }}" | docker login triald331v3.jfrog.io -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
-
+      
       - name: Build Docker image
         run: |
-          docker build -t triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest .
-
-      - name: Push Docker image to JFrog
+          docker build -t triald331v3.jfrog.io/my-docker-repo/hello-express-app:latest .
+      
+      - name: Push image to Artifactory with JFrog CLI
         run: |
-          docker push triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest
+          jf docker-push triald331v3.jfrog.io/my-docker-repo/hello-express-app:latest my-docker-build --build-name=hello-express-app --build-number=${{ github.run_number }}
+      
+      - name: Publish Build Info
+        run: |
+          jf rt bp hello-express-app ${{ github.run_number }}
