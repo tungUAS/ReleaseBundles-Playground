@@ -33,9 +33,20 @@ jobs:
         run: |
           docker build -t triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest .
 
-      - name: Push Docker image to Artifactory
+      - name: Push Docker image and capture build-info
         run: |
-          jf rt docker-push triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest hello-docker-local --build-name=hello-express-app --build-number=${{ github.run_number }} --server-id=my-server
+          jf docker-push triald331v3.jfrog.io/hello-docker-local/hello-express-app:latest hello-docker-local \
+            --build-name=hello-express-app \
+            --build-number=${{ github.run_number }} \
+            --server-id=my-server
+
+      - name: Attach Git metadata
+        run: |
+          jf rt bag hello-express-app ${{ github.run_number }} --server-id=my-server
+
+      - name: Collect environment variables
+        run: |
+          jf rt bce hello-express-app ${{ github.run_number }} --server-id=my-server
 
       - name: Publish Build Info to Artifactory
         run: |
