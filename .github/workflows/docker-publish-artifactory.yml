@@ -39,4 +39,4 @@ jobs:
 
       - name: Publish Build Info to Artifactory
         run: |
-          jf rt bp hello-express-app ${{ github.run_number }} --server-id=my-server
+          jf rt bp hello-express-app ${{ github.run_number }} --server-id=my-server --project=hello-project
