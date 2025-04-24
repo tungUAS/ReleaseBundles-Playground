@@ -20,6 +20,7 @@ jobs:
           jfrog-url: https://triald331v3.jfrog.io
           jfrog-username: ${{ secrets.JFROG_USERNAME }}
           jfrog-password: ${{ secrets.JFROG_PASSWORD }}
+          JFROG_CLI_AVOID_NEW_VERSION_WARNING: true
       
       - name: Docker login (for local push)
         run: echo "${{ secrets.JFROG_PASSWORD }}" | docker login triald331v3.jfrog.io -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
